@@ -47,8 +47,7 @@ macOS    ~/.config/opencode/service.json
 Linux    ~/.config/opencode/service.json
 ```
 
-也可以通过 `opencode pair` 生成一次性配对链接，或在启动日志中确认实际端口。
-OMMQ 使用 Basic Auth：用户名固定为 `opencode`，密码即上述服务凭据。
+也可以通过 `opencode pair` 生成一次性配对链接，或在启动日志中确认实际端口。使用 Basic Auth：用户名固定为 `opencode`，密码即上述服务凭据。
 
 ### 3. 安装与启动
 
@@ -59,8 +58,7 @@ npm run dev -- --port 5199
 
 本机浏览器打开 `http://127.0.0.1:5199`（或 `http://localhost:5199`）。只要代理能读到本机服务密码，就会直接进入控制台。
 
-首次打开时，前端先探测同源的 `/api/info`。开发/预览代理会为 **loopback 请求**注入
-`service.json` 中的 Basic Auth，因此：
+首次打开时，前端先探测同源的 `/api/info`。开发/预览代理会为 **loopback 请求**注入`service.json` 中的 Basic Auth，因此：
 
 - 不需要填写连接表单；
 - 密码不会写入 `localStorage` / `sessionStorage`，也不会出现在页面或前端代码里；
@@ -158,15 +156,13 @@ OPENCODE_SERVER=http://192.168.0.100:28894 npm run dev -- --host 0.0.0.0 --port 
 
 ### C. 直连模式
 
-服务器地址直接填 `http://127.0.0.1:28894`。浏览器会跨域请求，需要为 OpenCode Server
-显式放行前端来源：
+服务器地址直接填 `http://127.0.0.1:28894`。浏览器会跨域请求，需要为 OpenCode Server 显式放行前端来源：
 
 ```bash
 opencode serve --cors http://127.0.0.1:5199
 ```
 
-若使用 `opencode serve` 的默认 CORS 策略，直连可能被浏览器拦截，此时请使用代理模式。
-直连目标没有代理注入，始终需要在连接页填写密码。
+若使用 `opencode serve` 的默认 CORS 策略，直连可能被浏览器拦截，此时请使用代理模式。直连目标没有代理注入，始终需要在连接页填写密码。
 
 ## 生产部署
 
@@ -239,8 +235,7 @@ proxy_set_header Authorization $OMMQ_authorization;
 printf 'opencode:%s' '你的服务密码' | base64
 ```
 
-这样 loopback 请求会得到注入，局域网请求仍使用自己提交的密码。若 Nginx 前面还有一层
-代理，请正确配置 `set_real_ip_from` / `real_ip_header`，否则 `geo` 判断会失真。
+这样 loopback 请求会得到注入，局域网请求仍使用自己提交的密码。若 Nginx 前面还有一层代理，请正确配置 `set_real_ip_from` / `real_ip_header`，否则 `geo` 判断会失真。
 
 ### 构建默认地址
 
@@ -265,18 +260,13 @@ VITE_OPENCODE_SERVER=https://opencode.example.com npm run build
 
 OMMQ 的能力等同于你授予 OpenCode 的能力，请把它当成一台可以执行命令的开发机：
 
-- **本机自动认证是信任边界。** 任何能访问 `127.0.0.1:5199` 的本机进程或用户都可以无密码
-  调用 `/api`，等同于本机直接访问 OpenCode。不要把 `5199` 端口暴露到公网。
-- **不要在自动注入的代理前面再套反向代理。** 从本机反向代理转发进来的请求可能被当作
-  loopback。若必须这样做，先设置 `OPENCODE_PROXY_AUTH=0`，并在反向代理层完成认证。
-- Basic Auth 只是 Base64 编码，**不是加密**。跨机器访问请务必套 HTTPS 反向代理，不要把
-  `5199` 或 OpenCode 端口直接暴露到公网。
-- 手动连接并开启「记住密码」时，服务密码会明文写入 `localStorage`。共享设备上请关闭该
-  选项；自动打开模式不会把密码写入浏览器。
-- 代理会原样转发请求头，任何能访问前端代理的人都可以尝试连接 OpenCode Server；请配合
-  强密码、内网 ACL 或额外的网关认证。
+- **本机自动认证是信任边界。** 任何能访问 `127.0.0.1:5199` 的本机进程或用户都可以无密码调用 `/api`，等同于本机直接访问 OpenCode。不要把 `5199` 端口暴露到公网。
+- **不要在自动注入的代理前面再套反向代理。** 从本机反向代理转发进来的请求可能被当作 loopback。若必须这样做，先设置 `OPENCODE_PROXY_AUTH=0`，并在反向代理层完成认证。
+- Basic Auth 只是 Base64 编码，**不是加密**。跨机器访问请务必套 HTTPS 反向代理，不要把`5199` 或 OpenCode 端口直接暴露到公网。
+- 手动连接并开启「记住密码」时，服务密码会明文写入 `localStorage`。共享设备上请关闭该选项；自动打开模式不会把密码写入浏览器。
+- 代理会原样转发请求头，任何能访问前端代理的人都可以尝试连接 OpenCode Server；请配合强密码、内网 ACL 或额外的网关认证。
 - 工具授权会真实执行终端命令与文件写入。「始终允许」会对同类请求持续放行，请谨慎使用。
-- OMMQ 自身没有业务后端，也不上传数据；所有会话内容只存在于 OpenCode Server。
+- 项目自身没有业务后端，也不上传数据；所有会话内容只存在于 OpenCode Server。
 
 ## 工作原理
 
@@ -289,10 +279,8 @@ src/
 └─ styles/                  # 设计令牌、外壳、对话、面板
 ```
 
-- **本机自动打开**：首次启动探测同源 `/api/info`，成功后以当前 origin 作为服务器地址、
-  密码留空，由代理注入认证；探测失败则显示连接页。
-- **消息刷新**：SSE 事件触发去抖 160ms 的消息重取，避免本地增量合并产生漂移；
-  SSE 断开时每 5s 轮询兜底。
+- **本机自动打开**：首次启动探测同源 `/api/info`，成功后以当前 origin 作为服务器地址、密码留空，由代理注入认证；探测失败则显示连接页。
+- **消息刷新**：SSE 事件触发去抖 160ms 的消息重取，避免本地增量合并产生漂移；SSE 断开时每 5s 轮询兜底。
 - **消息上限**：OpenCode Server 单次最多返回 200 条消息，前端按此上限加载。
 - **会话隔离**：列表与会话创建均携带 `directory` 参数，与 OpenCode 的工作区语义一致。
 - **遥测回退**：会话未记录模型时，使用最后一条 assistant 消息的模型信息。
@@ -332,3 +320,16 @@ Vite。
 
 **模型报 `Insufficient account funds`？** 这是模型提供方的额度问题，与前端无关；
 在新建会话中选择其他可用模型即可。
+
+## 提交信息规范
+
+1.使用约定式提交（Conventional Commits）：
+
+feat: 新功能，fix: 修复 bug，docs: 文档更新，refactor: 重构，test: 测试相关，chore: 构建过程或辅助工具变动，build: 打包构建相关修改，ci: 持续集成相关修改，style: 代码格式调整
+
+2.提交信息格式：
+```
+<type>: <subject>
+```
+- type：提交类型，例如：feat、fix、docs、style、refactor、perf、test、build、ci、chore
+- subject：提交主题，简洁明了地描述本次提交的内容
