@@ -103,10 +103,10 @@ export function ConnectScreen({
 
           <div className="manifesto-copy">
             <span className="eyebrow">A DISTINCTIVE COCKPIT FOR OPENCODE</span>
-            <h1>个人小散户也可以<br/>
-              <span className="text-OMMQ">靠AI实盘量化</span>
+            <h1>OpenCode<br/>
+              <span className="text-OMMQ">Server Web</span>
             </h1>
-            <p>为 OpenCode Server 打造的自建WEB。展示对话、工具轨迹、权限、审批与会话遥测。</p>
+            <p>为 OpenCode 打造的自建WEB。展示对话、工具轨迹、权限、审批与会话遥测。</p>
           </div>
 
           <div className="feature-list">
@@ -127,7 +127,7 @@ export function ConnectScreen({
           </div>
 
           <div className="manifesto-foot">
-            <span className="mono">OMMQ / 0.1</span>
+            <span className="mono">24KRMB.COM</span>
             <span className="manifesto-rule" />
             <span className="mono">DESIGNED FOR OPENCODE 2.x</span>
           </div>
@@ -138,7 +138,7 @@ export function ConnectScreen({
             <div className="connect-card-head">
               <span className="eyebrow">UPLINK</span>
               <h2>连接你的 OpenCode</h2>
-              <p>输入服务器地址与访问密码，进入自建的控制台。</p>
+              <p>输入服务器地址与访问密码，进入控制台。</p>
             </div>
 
             {activeError && (
@@ -226,7 +226,7 @@ export function ConnectScreen({
               ) : (
                 <Radio size={17} />
               )}
-              <span>{busy ? '正在建立链路…' : '建立极光链路'}</span>
+              <span>{busy ? '正在建立链路…' : '建立链路'}</span>
               <ArrowRight size={16} className="connect-arrow" />
             </button>
 
