@@ -53,10 +53,12 @@ Linux    ~/.config/opencode/service.json
 
 ```bash
 npm install
-npm run dev -- --port 5199
+npm run dev -- --host 127.0.0.1 --port 5199
 ```
 
 本机浏览器打开 `http://127.0.0.1:5199`（或 `http://localhost:5199`）。只要代理能读到本机服务密码，就会直接进入控制台。
+
+> Vite 默认监听 `localhost`，在部分系统上只会绑定 IPv6 的 `::1`，此时 `127.0.0.1` 无法访问。显式指定 `--host 127.0.0.1` 可固定为 IPv4；需要局域网访问时改用 `--host 0.0.0.0`（见「代理模式」）。
 
 首次打开时，前端先探测同源的 `/api/info`。开发/预览代理会为 **loopback 请求**注入`service.json` 中的 Basic Auth，因此：
 
@@ -299,6 +301,8 @@ src/
 
 **本机打开为什么没有连接页？** 这是本机直接打开模式：代理从 `service.json` 读取密码，
 只为 loopback 请求注入 Basic Auth，前端探测成功后自动进入控制台。
+
+**Windows PowerShell 提示禁止运行 `npm.ps1`？** 这是系统执行策略限制，与项目无关。把命令中的 `npm` 换成 `npm.cmd` 即可，例如 `npm.cmd run dev -- --host 127.0.0.1 --port 5199`；或按需执行 `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` 后再使用 `npm`。
 
 **本机也出现连接页？** 依次检查：`service.json` 是否存在且可读；`OPENCODE_SERVER` 是否是
 本机地址；是否设置了 `OPENCODE_PROXY_AUTH=0`；页面是否由 `npm run dev` / `npm run preview`
